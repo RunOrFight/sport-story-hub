@@ -1,28 +1,33 @@
 import fs from "fs"
 import path from "path"
 import express from "express"
-import {ViteDevServer} from "vite";
+import vite from "vite";
 import chalk from "chalk";
 import "./bot"
 import {createFullEvent, getDataByRoute} from "./getDataByRoute";
 import {configureStore} from "@reduxjs/toolkit";
 import {routeMap} from "./routeMap";
+import {render} from "./entryServer";
 
 
 const initApp = async () => {
     const app = express()
     app.use(express.json())
 
-    let vite: ViteDevServer
 
-    vite = await (await import("vite")).createServer({
+    const devServer = await vite.createServer({
         server: {middlewareMode: true},
         appType: "custom",
     })
-    app.use(vite.middlewares)
+    app.use(devServer.middlewares)
 
     app.use(routeMap.apiCreateEventRoute, (req, res) => {
         createFullEvent(req.body)
+
+        res.sendStatus(200)
+    })
+
+    app.use("/favicon.ico", (req, res) => {
 
         res.sendStatus(200)
     })
@@ -33,15 +38,14 @@ const initApp = async () => {
         try {
             const htmlFile = fs.readFileSync(path.resolve("./index.html"), "utf-8")
 
-            const template = await vite.transformIndexHtml(route, htmlFile)
-
-            const render = (await vite.ssrLoadModule("/src/entryServer.tsx")).render
+            const template = await devServer.transformIndexHtml(route, htmlFile)
 
             const data = getDataByRoute(route)
 
             const store = configureStore({reducer: state => state, preloadedState: data})
 
             const appHtml = await render({route, store})
+
             const dataString = `<script>window.__SSR_DATA__=${JSON.stringify(data)}</script>`
 
             const html = template
@@ -52,7 +56,7 @@ const initApp = async () => {
         } catch (error) {
 
             if (process.env.NODE_ENV === "development" && error instanceof Error) {
-                vite.ssrFixStacktrace(error)
+                devServer.ssrFixStacktrace(error)
             }
             next(error)
         }

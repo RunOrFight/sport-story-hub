@@ -1,13 +1,21 @@
 import React from 'react';
 import {IAppState} from "../types";
 import {useSelector} from "react-redux";
+import {Card, Descriptions} from "antd";
 
 
 const EventsPage = () => {
     const events = useSelector((state: IAppState) => state.events)
 
     return <div>
-        <pre>{JSON.stringify(events, null, 2)}</pre>
+        {Object.values(events).map((event) => <Card hoverable title={event.place} style={{width: 300}}>
+            <Descriptions layout={"vertical"}>
+                <Descriptions.Item label="Date">{event.date}</Descriptions.Item>
+                <Descriptions.Item label="Price">{event.price}</Descriptions.Item>
+                <Descriptions.Item
+                    label="Participants">{`${event.participants.length}/${event.participantsCount}`}</Descriptions.Item>
+            </Descriptions>
+        </Card>)}
     </div>;
 };
 
