@@ -27,8 +27,7 @@ const errorMessage = {
     content: tKeysMap.createEventForm.errorMessage,
 } as const
 
-export default function CreateEventPage() {
-
+export default function CreateEvent() {
     const [messageApi, contextHolder] = message.useMessage();
     const onFinish = async (values: ICreateEventFormValues) => {
         const normalizedDate = values.date.format('YYYY-MM-DD HH:mm:ss')
@@ -85,5 +84,3 @@ export default function CreateEventPage() {
         </Form>
     </>
 };
-
-export {CreateEventPage};
