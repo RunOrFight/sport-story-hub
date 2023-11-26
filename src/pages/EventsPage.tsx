@@ -1,4 +1,3 @@
-import React from 'react';
 import {IAppState} from "../types";
 import {useSelector} from "react-redux";
 import {Card, Descriptions} from "antd";

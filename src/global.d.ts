@@ -3,6 +3,7 @@ namespace NodeJS {
         TELEGRAM_BOT_ACCESS_TOKEN?: string;
         WEB_APP_URL?: string
         APP_PORT?: string
+        APP_MODE: "PROD" | "DEV"
     }
 }
 

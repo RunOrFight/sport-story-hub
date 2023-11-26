@@ -1,9 +1,7 @@
-import React from 'react';
 import {Button, DatePicker, Form, Input, InputNumber, message} from "antd";
 import {IEventRaw} from "../types";
 import dayjs from "dayjs"
 import {TKeysMap} from "../tKeysMap";
-import {useDispatch} from "react-redux";
 import {routeMap} from "../routeMap";
 
 interface ICreateEventFormValues extends Omit<IEventRaw, "date"> {
@@ -29,7 +27,6 @@ const errorMessage = {
 
 const CreateEventPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
-    const dispatch = useDispatch()
     const onFinish = async (values: ICreateEventFormValues) => {
         const normalizedDate = values.date.format('YYYY-MM-DD HH:mm:ss')
 
@@ -47,7 +44,7 @@ const CreateEventPage = () => {
         messageApi.open(successMessage);
     };
 
-    const onFinishFailed = (errorInfo: any) => {
+    const onFinishFailed = () => {
         messageApi.open(errorMessage);
     };
 

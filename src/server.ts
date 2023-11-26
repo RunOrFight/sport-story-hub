@@ -1,26 +1,41 @@
-import fs from "fs"
-import path from "path"
+import * as fs from "fs"
+import * as path from "path"
 import express from "express"
-import vite from "vite";
 import chalk from "chalk";
 import {createFullEvent, getDataByRoute} from "./getDataByRoute";
-import {configureStore} from "@reduxjs/toolkit";
+import redux from "@reduxjs/toolkit";
 import {routeMap} from "./routeMap";
-import {render} from "./entryServer";
-import dotenv from "dotenv";
+import {config} from "dotenv";
+import {extractStyle} from '@ant-design/static-style-extract';
 
-dotenv.config()
+config()
 
 const initApp = async () => {
+
+    fs.writeFileSync(path.resolve("dist/antd.min.css"), extractStyle());
+
     const app = express()
     app.use(express.json())
 
+    let devServer: any;
 
-    const devServer = await vite.createServer({
-        server: {middlewareMode: true},
-        appType: "custom",
-    })
-    app.use(devServer.middlewares)
+    if (process.env.APP_MODE === "DEV") {
+        devServer = await (
+            await import("vite")
+        ).createServer({
+            server: {middlewareMode: true},
+            appType: "custom",
+        })
+        app.use(devServer.middlewares)
+    } else {
+        app.use((await import("compression")).default())
+        app.use(
+            (await import("serve-static")).default(path.resolve("dist/client"), {
+                index: false,
+            }),
+        )
+    }
+
 
     app.use(routeMap.apiCreateEventRoute, (req, res) => {
         createFullEvent(req.body)
@@ -28,22 +43,34 @@ const initApp = async () => {
         res.sendStatus(200)
     })
 
-    app.use("/favicon.ico", (req, res) => {
+    app.use("/favicon.ico", (_req, res) => {
 
         res.sendStatus(200)
     })
 
     app.use("*", async (req, res, next) => {
         const route = req.originalUrl
+        let template, render
 
         try {
-            const htmlFile = fs.readFileSync(path.resolve("./index.html"), "utf-8")
+            if (process.env.APP_MODE === "DEV") {
+                template = fs.readFileSync(path.resolve("./index.html"), "utf-8")
 
-            const template = await devServer.transformIndexHtml(route, htmlFile)
+                template = await devServer.transformIndexHtml(route, template)
+
+                render = (await devServer.ssrLoadModule("src/entryServer.tsx")).render
+            } else {
+                template = fs.readFileSync(
+                    path.resolve("dist/client/index.html"),
+                    "utf-8"
+                )
+                // @ts-ignore
+                render = (await import("../dist/server/entryServer.js")).render
+            }
 
             const data = getDataByRoute(route)
 
-            const store = configureStore({reducer: state => state, preloadedState: data})
+            const store = redux.configureStore({reducer: state => state, preloadedState: data})
 
             const appHtml = await render({route, store})
 
@@ -56,7 +83,7 @@ const initApp = async () => {
             res.status(200).set({"Content-Type": "text/html"}).end(html)
         } catch (error) {
 
-            if (process.env.NODE_ENV === "development" && error instanceof Error) {
+            if (process.env.APP_MODE === "DEV" && error instanceof Error) {
                 devServer.ssrFixStacktrace(error)
             }
             next(error)
