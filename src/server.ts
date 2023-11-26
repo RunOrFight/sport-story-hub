@@ -11,8 +11,7 @@ import {extractStyle} from '@ant-design/static-style-extract';
 config()
 
 const initApp = async () => {
-
-    fs.writeFileSync(path.resolve("dist/antd.min.css"), extractStyle());
+    const style = extractStyle()
 
     const app = express()
     app.use(express.json())
@@ -76,7 +75,10 @@ const initApp = async () => {
 
             const dataString = `<script>window.__SSR_DATA__=${JSON.stringify(data)}</script>`
 
+            const styleString = `<style>${style}</style>`
+
             const html = template
+                .replace(`<!--style-outlet-->`, styleString)
                 .replace(`<!--ssr-outlet-->`, appHtml)
                 .replace(`<!--ssr-data-->`, dataString)
 
