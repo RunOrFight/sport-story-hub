@@ -14,12 +14,6 @@ bot.on(...registerBotEventHandler('message', async (msg) => {
 
     await bot.sendMessage(chatId, tKeysMap.useButtonsHint, {
         reply_markup: {
-            keyboard: [
-                [{
-                    text: tKeysMap.webAppButton,
-                    web_app: {url: `${process.env.WEB_APP_URL!}/events/create`}
-                }]
-            ],
             inline_keyboard: [
                 [{text: "Hi", web_app: {url: process.env.WEB_APP_URL!},}]
             ]
