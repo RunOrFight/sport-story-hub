@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "APP_MODE=DEV nodemon",
     "prod": "APP_MODE=PROD tsx src/server.ts",
-    "build": "rimraf dist && npm run build:client && npm run build:server",
+    "build": "echo Building Functions",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --outDir dist/server --ssr src/entryServer.tsx"
   },
