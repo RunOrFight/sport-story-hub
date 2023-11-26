@@ -15,20 +15,11 @@ const initApp = async () => {
 
     let vite: ViteDevServer
 
-    if (process.env.NODE_ENV === "development") {
-        vite = await (await import("vite")).createServer({
-            server: {middlewareMode: true},
-            appType: "custom",
-        })
-        app.use(vite.middlewares)
-    } else {
-        app.use((await import("compression")).default())
-        app.use(
-            (await import("serve-static")).default(path.resolve("dist/client"), {
-                index: false,
-            }),
-        )
-    }
+    vite = await (await import("vite")).createServer({
+        server: {middlewareMode: true},
+        appType: "custom",
+    })
+    app.use(vite.middlewares)
 
     app.use(routeMap.apiCreateEventRoute, (req, res) => {
         createFullEvent(req.body)
@@ -38,23 +29,13 @@ const initApp = async () => {
 
     app.use("*", async (req, res, next) => {
         const route = req.originalUrl
-        let template, render
 
         try {
-            if (process.env.NODE_ENV === "development") {
-                template = fs.readFileSync(path.resolve("./index.html"), "utf-8")
+            const htmlFile = fs.readFileSync(path.resolve("./index.html"), "utf-8")
 
-                template = await vite.transformIndexHtml(route, template)
+            const template = await vite.transformIndexHtml(route, htmlFile)
 
-                render = (await vite.ssrLoadModule("/src/entryServer.tsx")).render
-            } else {
-                template = fs.readFileSync(
-                    path.resolve("dist/client/index.html"),
-                    "utf-8"
-                )
-                // @ts-ignore
-                render = (await import("../dist/server/entryServer.mjs")).render
-            }
+            const render = (await vite.ssrLoadModule("/src/entryServer.tsx")).render
 
             const data = getDataByRoute(route)
 

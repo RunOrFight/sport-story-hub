@@ -9,7 +9,7 @@ const data = window.__SSR_DATA__
 delete window.__SSR_DATA__
 
 const store = configureStore({
-    preloadedState: data,
+    preloadedState: data ?? {events: {}},
     devTools: true,
     reducer: (state, action) => {
         switch (action.type) {
