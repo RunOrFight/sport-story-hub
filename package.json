@@ -27,5 +27,18 @@
     "eslint-config-next": "14.0.3",
     "telegram-webapps-types-new": "^1.0.5",
     "typescript": "^5"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false,
+    "querystring": false,
+    "crypto": false,
+    "http": false,
+    "https": false,
+    "stream": false,
+    "zlib": false,
+    "net": false,
+    "tls": false
   }
 }
