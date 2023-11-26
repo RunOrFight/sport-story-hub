@@ -4,6 +4,8 @@ import {Button, DatePicker, Form, Input, InputNumber, message} from "antd";
 import dayjs from "dayjs"
 import {IEventRaw} from "@/app/lib/types";
 import {tKeysMap} from "@/app/lib/tKeysMap";
+import {createFullEvent} from "@/app/lib/eventsApi";
+import Script from "next/script";
 
 
 interface ICreateEventFormValues extends Omit<IEventRaw, "date"> {
@@ -32,16 +34,11 @@ export default function CreateEvent() {
     const onFinish = async (values: ICreateEventFormValues) => {
         const normalizedDate = values.date.format('YYYY-MM-DD HH:mm:ss')
 
-        await fetch("/api/events", {
-            body: JSON.stringify({
-                ...values,
-                date: normalizedDate
-            }),
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
+
+        Telegram.WebApp.sendData(JSON.stringify(createFullEvent({
+            ...values,
+            date: normalizedDate
+        })))
 
         messageApi.open(successMessage);
     };
@@ -52,6 +49,7 @@ export default function CreateEvent() {
 
     return <>
         {contextHolder}
+        <Script src="https://telegram.org/js/telegram-web-app.js" strategy="beforeInteractive"/>
         <Form
             layout={"vertical"}
             name="basic"

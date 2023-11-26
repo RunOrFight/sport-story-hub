@@ -1,11 +1,13 @@
 import {IEventFull, IEventRaw} from "./types";
 import {v4 as uuidv4} from "uuid";
 
-//todo remove and use db
-const events: Record<string, IEventFull> = {}
+if (!global.events) {
+    global.events = {}
+}
 
 const getEventOrThrowError = (eventId: string) => {
-    const event = events[eventId]
+
+    const event = global.events[eventId]
 
     if (!event) {
         throw `cannot find event with id: ${eventId}`
@@ -18,6 +20,8 @@ const createFullEvent = (event: IEventRaw) => {
 
     const fullEvent: IEventFull = {...event, participants: [], id: uuidv4()}
 
+    global.events[fullEvent.id] = fullEvent
+    
     return fullEvent
 }
 
