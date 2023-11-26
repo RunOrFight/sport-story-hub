@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=development npx nodemon",
-    "build": "npm run build:client && npm run build:server",
-    "build:client": "vite build --outDir dist/client",
-    "build:server": "vite build --outDir dist/server --ssr src/entryServer.tsx",
-    "prod": "NODE_ENV=production npx nodemon"
+    "build": "vite build"
   },
   "keywords": [],
   "author": "",
