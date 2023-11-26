@@ -7,6 +7,9 @@ import {createFullEvent, getDataByRoute} from "./getDataByRoute";
 import {configureStore} from "@reduxjs/toolkit";
 import {routeMap} from "./routeMap";
 import {render} from "./entryServer";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 const initApp = async () => {
     const app = express()
