@@ -5,11 +5,13 @@ import {EventsPage} from "./pages/EventsPage";
 import {CreateEventPage} from "./pages/CreateEventPage";
 
 const App = () => {
-    return <Routes>
-        <Route index element={<div>{"Home"}</div>}/>
-        <Route path={routeMap.wepAppEventsRoute} element={<EventsPage/>}/>
-        <Route path={routeMap.webAppCreateEventRoute} element={<CreateEventPage/>}/>
-    </Routes>
+    return <div>
+        <Routes>
+            <Route index element={<div>{"Home"}</div>}/>
+            <Route path={routeMap.wepAppEventsRoute} element={<EventsPage/>}/>
+            <Route path={routeMap.webAppCreateEventRoute} element={<CreateEventPage/>}/>
+        </Routes>
+    </div>
 }
 
 export {App}
