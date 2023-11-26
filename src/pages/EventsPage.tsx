@@ -8,7 +8,7 @@ const EventsPage = () => {
     const events = useSelector((state: IAppState) => state.events)
 
     return <div>
-        {Object.values(events).map((event) => <Card hoverable title={event.place} style={{width: 300}}>
+        {Object.values(events).map((event) => <Card key={event.id} hoverable title={event.place} style={{width: 300}}>
             <Descriptions layout={"vertical"}>
                 <Descriptions.Item label="Date">{event.date}</Descriptions.Item>
                 <Descriptions.Item label="Price">{event.price}</Descriptions.Item>
