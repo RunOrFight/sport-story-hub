@@ -6,7 +6,9 @@ import {useSelector} from "react-redux";
 const EventsPage = () => {
     const events = useSelector((state: IAppState) => state.events)
 
-    return (<pre>{JSON.stringify(events, null, 2)}</pre>);
+    return <div>
+        <pre>{JSON.stringify(events, null, 2)}</pre>
+    </div>;
 };
 
 export {EventsPage};

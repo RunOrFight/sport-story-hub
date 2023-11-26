@@ -5,6 +5,7 @@ import {createEventMessage} from "./createEventMessage";
 import {registerBotEventHandler} from "./logger";
 import dotenv from "dotenv";
 import {createFullEvent, getEventOrThrowError} from "./getDataByRoute";
+import {routeMap} from "./routeMap";
 
 dotenv.config()
 
@@ -18,7 +19,7 @@ bot.on(...registerBotEventHandler('message', async (msg) => {
     await bot.sendMessage(chatId, TKeysMap.useButtonsHint, {
         reply_markup: {
             keyboard: [
-                [{text: TKeysMap.webAppButton, web_app: {url: process.env.WEB_APP_URL!}}]
+                [{text: TKeysMap.webAppButton, web_app: {url: `${process.env.WEB_APP_URL!}${routeMap.webAppCreateEventRoute}`}}]
             ],
             inline_keyboard: [
                 [{text: "Hi", web_app: {url: process.env.WEB_APP_URL!},}]
