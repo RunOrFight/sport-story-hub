@@ -3,12 +3,10 @@ import path from "path"
 import express from "express"
 import vite from "vite";
 import chalk from "chalk";
-import "./bot"
 import {createFullEvent, getDataByRoute} from "./getDataByRoute";
 import {configureStore} from "@reduxjs/toolkit";
 import {routeMap} from "./routeMap";
 import {render} from "./entryServer";
-
 
 const initApp = async () => {
     const app = express()
