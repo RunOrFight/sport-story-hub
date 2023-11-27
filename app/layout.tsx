@@ -3,7 +3,6 @@ import {Inter} from 'next/font/google'
 import './globals.css'
 import StyledComponentsRegistry from "@/app/lib/AntdRegistry";
 import {PropsWithChildren} from "react";
-import "@/app/lib/bot"
 
 const inter = Inter({subsets: ['latin']})
 
@@ -19,7 +18,7 @@ global.events = {}
 export default function RootLayout({children,}: PropsWithChildren) {
     return (
         <html lang="en">
-        
+
         <StyledComponentsRegistry>
             <body className={inter.className}>{children}</body>
         </StyledComponentsRegistry>
