@@ -4,6 +4,7 @@ import {tKeysMap} from "@/app/lib/tKeysMap";
 import {isRawEvent} from "@/app/lib/typeGuards";
 import {createFullEvent, getEventOrThrowError} from "@/app/lib/eventsApi";
 import {createEventMessage} from "@/app/lib/createEventMessage";
+import {PHASE_PRODUCTION_BUILD} from "next/constants";
 
 
 let telegramBotInstance: TelegramBot = null!
@@ -13,7 +14,7 @@ const createTelegramBotInstance = () => {
         return telegramBotInstance ?? globalThis.telegramBotInstance
     }
 
-    telegramBotInstance = new TelegramBot(process.env.TELEGRAM_BOT_ACCESS_TOKEN!)
+    telegramBotInstance = new TelegramBot(process.env.TELEGRAM_BOT_ACCESS_TOKEN!, {polling: true})
     globalThis.telegramBotInstance = telegramBotInstance
     console.log("Telegram Bot Instance Created")
 
@@ -118,4 +119,6 @@ const createTelegramBotInstance = () => {
     return telegramBotInstance
 }
 
-export {createTelegramBotInstance}
+if (process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD) {
+    createTelegramBotInstance()
+}

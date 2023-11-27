@@ -19,7 +19,7 @@ global.events = {}
 export default function RootLayout({children,}: PropsWithChildren) {
     return (
         <html lang="en">
-
+        
         <StyledComponentsRegistry>
             <body className={inter.className}>{children}</body>
         </StyledComponentsRegistry>
